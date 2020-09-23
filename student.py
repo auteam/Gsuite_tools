@@ -43,3 +43,8 @@ class Student:
         return [self.group_email, self.email, self.member_type, self.member_role]
 
 
+class Group():
+    students = []  # list of Student objects
+
+    def __init__(self, students):
+        self.students = students

@@ -1,1 +1,2 @@
 transliterate~=1.10.2
+docx~=0.2.4
