@@ -9,11 +9,15 @@ class ImportDoc:
     group = 'bi-15'
     grouplist = []
     text = ''
+    pattern = 'n1'
 
-    def __init__(self, filename):
+    def __init__(self, filename, pattern):
         self.filename = filename
-        self.group = self.normalise_group(self.get_text(filename))
-        self.grouplist = self.get_grouplist(filename)
+        self.pattern = pattern
+
+        if pattern == 'n1':
+            self.grouplist = self.get_grouplist(filename)
+            self.group = self.normalise_group(self.get_text(filename))
 
     def get_text(self, filename):
         doc = docx.Document(filename)

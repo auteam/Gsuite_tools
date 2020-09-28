@@ -1,2 +1,11 @@
 /source/*
+!/source/Example
 /output/*
+.idea/.gitignore
+.idea/g_suite_toolbox.iml
+.idea/inspectionProfiles/
+.idea/misc.xml
+.idea/modules.xml
+.idea/vcs.xml
+__pycache__/
+venv/
