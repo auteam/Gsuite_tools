@@ -4,20 +4,23 @@ from transliterate import translit
 class Student:
     full_name_ru = ['Свирепов', 'Денис', 'Дмитриевич']
     full_name_en = ['Svirepov', 'Denis', 'Dmitrievich']
+    domain = 'urtt.ru'
     group = 'bi-15'
     password = 'P@ssw0rd'
     email = 'svirepov.dd@urtt.ru'
-    group_email = group + '@urtt.ru'
+    group_email = 'bi-15@urtt.ru'
     ou = '/'
     member_type = "USER"
     member_role = "MEMBER"
 
-    def __init__(self, full_name, group, password, ou):
+    def __init__(self, full_name, domain, group, password, ou):
         self.full_name_ru = full_name
         for i in range(3):
             self.full_name_en[i] = translit(full_name[i], 'ru', reversed=True)
 
+        self.domain = domain
         self.group = group
+        self.group_email = group + '@' + domain
         self.password = password
         self.ou = ou
 

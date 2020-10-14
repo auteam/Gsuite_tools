@@ -22,8 +22,9 @@ if __name__ == '__main__':
         doc_import = ImportDoc(filename, 'n1')
 
         group = doc_import.group
+        domain = 'urtt.ru'
         password = 'P@ssw0rd'
-        ou = '/student'
+        ou = '/students'
 
         names = doc_import.grouplist
 
@@ -37,7 +38,7 @@ if __name__ == '__main__':
             for f_name in names:
                 if f_name is not None:
                     name = f_name.split(' ')
-                    stud = Student(name, group, password, ou)
+                    stud = Student(name, domain,group, password, ou)
                     writer.writerow(stud.add_csv_users_line())
 
         header_groups = [["Group Email [Required]", "Member Email", "Member Type", "Member Role"]]
@@ -49,5 +50,5 @@ if __name__ == '__main__':
             for f_name in names:
                 if f_name is not None:
                     name = f_name.split(' ')
-                    stud = Student(name, group, password, ou)
+                    stud = Student(name, domain,group, password, ou)
                     writer.writerow(stud.add_csv_groups_line())
