@@ -6,9 +6,9 @@ import os
 
 
 if __name__ == '__main__':
-    dir_files = 'source/ЦЭиСТ/'
+    dir_files = 'source/ИТ и П/'
     all_files = os.listdir(dir_files)
-    doc_format = 'n2'   # n1 (several files)
+    doc_format = 'n1'   # n1 (several files)
     files = []
     for file in all_files:
         if doc_format == 'n1':
@@ -35,8 +35,13 @@ if __name__ == '__main__':
         groups = doc_import.groups
         names = doc_import.grouplist
         groups_dict = {}
-        for i in range(len(groups)):
-            groups_dict[groups[i]] = names[i]
+
+        if doc_format == 'n1':
+            for i in range(len(groups)):
+                groups_dict[groups[0]] = names
+        elif doc_format == 'n2':
+            for i in range(len(groups)):
+                groups_dict[groups[i]] = names[i]
 
         for group in groups:
             with open("output/users_" + group + ".csv", 'w', newline='', encoding='utf-8') as csv_file:
@@ -45,7 +50,7 @@ if __name__ == '__main__':
                     writer.writerow(line)
                 for f_name in groups_dict.get(group):
                     if f_name is not None:
-                        name = f_name[0].split(' ')
+                        name = f_name
                         stud = Student(name, domain, group, password, ou)
                         writer.writerow(stud.add_csv_users_line())
 
@@ -55,6 +60,6 @@ if __name__ == '__main__':
                     writer.writerow(line)
                 for f_name in groups_dict.get(group):
                     if f_name is not None:
-                        name = f_name[0].split(' ')
+                        name = f_name
                         stud = Student(name, domain, group, password, ou)
                         writer.writerow(stud.add_csv_groups_line())

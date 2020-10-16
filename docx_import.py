@@ -30,12 +30,29 @@ class ImportDoc:
         return full_text
 
     def normalise_group(self, p, doc_pattern):
+        def normalise(group):
+            if len(group) == 5:  # для групп с 1 буквой. Л Д Э
+                group = group[0:2] + group[1 - 3:]
+                groups.append(group)
+            elif len(group) == 6:  # для групп с 2мя буквами КС Би
+                group = group[0:3] + group[1 - 3:]
+                groups.append(group)
+            elif len(group) == 7:  # заочники с 3мя буквами НЕ ПРОВЕРЕНО
+                group = group[0:4] + group[1 - 3:]
+                groups.append(group)
+            else:
+                print('INCORRECT GROUP NAME')
+
         if doc_pattern == 'n1':
+            groups = []
             group_pattern = r'\w+\-([0-9])([0-9])([0-9])$'
-            match = re.search(group_pattern, p)
-            group_ru = match.group()
-            group = (translit(group_ru, 'ru', reversed=True)).lower()
-            group = group[0:2] + group[1 - 3:]
+            for row in p:
+                if row is not None:
+                    match = re.search(group_pattern, row[0])
+                    group_ru = match.group()
+                    group = (translit(group_ru, 'ru', reversed=True)).lower()
+                    normalise(group)
+                    return groups
 
         elif doc_pattern == 'n2':
             group_pattern = r'\w+\-([0-9])([0-9])([0-9])*'
@@ -45,51 +62,26 @@ class ImportDoc:
                     if re.match(group_pattern, string):
                         group_ru = re.match(group_pattern, string).group(0)
                         group = (translit(group_ru, 'ru', reversed=True)).lower()
-                        if len(group) == 5:         # для групп с 1 буквой. Л Д Э
-                            group = group[0:2] + group[1 - 3:]
-                            groups.append(group)
-                        elif len(group) == 6:       # для групп с 2мя буквами КС Би
-                            group = group[0:3] + group[1 - 3:]
-                            groups.append(group)
-                        elif len(group) == 7:       # заочники с 3мя буквами НЕ ПРОВЕРЕНО
-                            group = group[0:4] + group[1 - 3:]
-                            groups.append(group)
-                        else:
-                            print('INCORRECT GROUP NAME')
+                        normalise(group)
             return groups
 
     def get_grouplist(self, filename, pattern):
         # TODO возврат списка списков -- общий формат вывода функций в ImportDoc
         if pattern == 'n1':
-            doc = Document(filename)
-            table = doc.tables[0]
+            tables = Document(filename).tables
+            groups_list = []  # list of group lists
 
-            # Data will be a list of rows represented as dictionaries
-            # containing each row's data.
-            data = []
+            for i in range(len(tables)):
+                group_list = []
+                for j in range(len(tables[i].columns)):  # Получаем cells из column ФИО
+                    for cell in tables[i].columns[j].cells:
+                        for paragraph in cell.paragraphs:
+                            group_list.append(paragraph.text.split('\xa0')) # , or \xa0
 
-            keys = None
-            for i, row in enumerate(table.rows):
-                text = (cell.text for cell in row.cells)
-
-                # Establish the mapping based on the first row
-                # headers; these will become the keys of our dictionary
-                if i == 0:
-                    keys = tuple(text)
-                    continue
-
-                # Construct a dictionary for this row, mapping
-                # keys to values for this row
-                row_data = dict(zip(keys, text))
-                data.append(row_data)
-
-            grouplist = []
-
-            for dict_ in data:
-                fio = dict_.get('Фамилия, имя, отчество ')
-                grouplist.append(fio)
-
-            return grouplist
+                for k in range(len(group_list)):
+                    if len(group_list[k]) >= 2:
+                        groups_list.append(group_list[k])
+                return groups_list
 
         elif pattern == 'n2':
             tables = Document(filename).tables
