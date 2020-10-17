@@ -6,17 +6,20 @@ import os
 
 
 if __name__ == '__main__':
-    dir_files = 'source/ИТ и П/'
+    dir_files = 'source/'
     all_files = os.listdir(dir_files)
-    doc_format = 'n1'   # n1 (several files)
+    doc_format = 'n1'   # n1 (several files), n2 (all in one: (text(group) + table)*n )
     files = []
     for file in all_files:
         if doc_format == 'n1':
-            if re.match(r'\w+-\d\d\d\.docx', file):
+            if re.match(r'.*\w+-\d\d\d\.docx', file):
                 files.append(file)
         elif doc_format == 'n2':
             if re.match(r'n2\.docx', file):
                 files.append(file)
+        # elif doc_format == 'n3':
+        #     if re.match(r'n3\.docx', file):
+        #         files.append(file)
     print(files, end='\n')
 
     for file in files:
@@ -42,6 +45,9 @@ if __name__ == '__main__':
         elif doc_format == 'n2':
             for i in range(len(groups)):
                 groups_dict[groups[i]] = names[i]
+        # elif doc_format == 'n3':
+        #     for i in range(len(groups)):
+        #         groups_dict[groups[i]] = names[i]
 
         for group in groups:
             with open("output/users_" + group + ".csv", 'w', newline='', encoding='utf-8') as csv_file:
