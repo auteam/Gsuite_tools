@@ -15,15 +15,14 @@ class ImportDoc:
         self.filename = filename
         self.pattern = pattern
 
-        if pattern == 'n1':
-            self.grouplist = self.get_grouplist(filename, pattern)
-            self.groups = self.normalise_group(self.get_text(filename), pattern)
-        elif pattern == 'n2':
+        if pattern == 'n1' or pattern == 'n2':
             self.grouplist = self.get_grouplist(filename, pattern)
             self.groups = self.normalise_group(self.get_text(filename), pattern)
         # elif pattern == 'n3':
         #     self.grouplist = self.get_grouplist(filename, pattern)
         #     self.groups = self.normalise_group(self.get_text(filename), pattern)
+        else:
+            print('WRONG DOC_PATTERN')
 
     def get_text(self, filename):
         doc = docx.Document(filename)
@@ -123,12 +122,11 @@ class ImportDoc:
 
         # elif pattern == 'n3':
         #     text = self.get_text(filename)
-        #     group_pattern = r''
-        #
+        #     group_pattern = r'([А-Яa-я])+\-([0-9])([0-9])([0-9]).*'
         #     text_lists = []
-        #     for row in text:
-        #         text_lists.append(row[0].split(' '))
-        #     text_lists = [x for x in text_lists if x[0] is not None]
-        #     groups_list = [user for user in text_lists if user]  # list of group lists
-        else:
-            print("WRONG DOC PATTERN")
+        #
+        #     text = [row[0].split(' ') for row in text]
+        #
+        #     for name in text:
+        #         print(name[0])
+        #         print(bool(re.match(name[0], group_pattern)), '\n')

@@ -6,9 +6,9 @@ import os
 
 
 if __name__ == '__main__':
-    dir_files = 'source/'
+    dir_files = 'source/ИТ и П/'
     all_files = os.listdir(dir_files)
-    doc_format = 'n1'   # n1 (several files), n2 (all in one: (text(group) + table)*n )
+    doc_format = 'n1'   # n1 (several files), n2 (all in one: (text(group) + table)*n ),
     files = []
     for file in all_files:
         if doc_format == 'n1':
@@ -25,7 +25,6 @@ if __name__ == '__main__':
     for file in files:
         filename = dir_files + file
         print('\n' + filename)
-        doc_import = ImportDoc(filename, doc_format)
 
         domain = 'urtt.ru'
         password = 'P@ssw0rd'
@@ -35,6 +34,7 @@ if __name__ == '__main__':
              "Org Unit Path [Required]", "Change Password at Next Sign-In"]]
         header_groups = [["Group Email [Required]", "Member Email", "Member Type", "Member Role"]]
 
+        doc_import = ImportDoc(filename, doc_format)
         groups = doc_import.groups
         names = doc_import.grouplist
         groups_dict = {}
