@@ -1,5 +1,5 @@
 from transliterate import translit
-
+import config as cfg
 
 class Student:
     full_name_ru = ['Свирепов', 'Денис', 'Дмитриевич']
@@ -28,14 +28,17 @@ class Student:
         familia = (self.full_name_en[0].lower()).replace('\'', '')
         io = '.' + (self.full_name_en[1].lower()).replace('\'', '')[0] + \
              (self.full_name_en[2].lower()).replace('\'', '')[0]
-        self.email = group_ + familia + io + '@urtt.ru'
+        if cfg.user_data['group_in_email']:
+            self.email = group_ + familia + io + '@' + domain
+        else:
+            self.email = familia + io + '@' + domain
 
     def create_email(self):
         group_ = self.group + '.'
         familia = (self.full_name_en[0].lower()).replace('\'', '')
         io = '.' + (self.full_name_en[1].lower()).replace('\'', '')[0] + \
              (self.full_name_en[2].lower()).replace('\'', '')[0]
-        self.email = group_ + familia + io + '@urtt.ru'
+        self.email = group_ + familia + io + '@' + self.domain
         return self.email
 
     def add_csv_users_line(self):
@@ -44,10 +47,3 @@ class Student:
 
     def add_csv_groups_line(self):
         return [self.group_email, self.email, self.member_type, self.member_role]
-
-
-class Group():
-    students = []  # list of Student objects
-
-    def __init__(self, students):
-        self.students = students

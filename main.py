@@ -1,5 +1,6 @@
-from student import *
-from docx_import import *
+from src.student import *
+from src.docx_import import *
+import config as cfg
 import csv
 import os
 
@@ -9,27 +10,27 @@ import os
 
 
 if __name__ == '__main__':
-    all_files = os.listdir('source/КСи Д/')
+    all_files = os.listdir(cfg.input_dir)
     files = []
     for file in all_files:
-        if re.match(r'\w+-\d\d\d\.docx', file):
+        if re.match(cfg.regex_input_file, file):
             files.append(file)
     print(files, end='\n')
 
     for file in files:
-        filename = 'source/КСи Д/' + file
+        filename = cfg.input_dir + file
         print('\n' + filename)
-        doc_import = ImportDoc(filename, 'n1')
+        doc_import = ImportDoc(filename, cfg.file_pattern)
 
-        group = doc_import.group
-        domain = 'urtt.ru'
-        password = 'P@ssw0rd'
-        ou = '/students'
+        group = cfg.user_data['group']
+        domain = cfg.user_data['domain']
+        password = cfg.user_data['password']
+        ou = cfg.user_data['ou']
 
         names = doc_import.grouplist
 
-        header_users = [["First Name [Required]", "Last Name [Required]", "Email Address [Required]", "Password [Required]",
-                        "Org Unit Path [Required]", "Change Password at Next Sign-In"]]
+        header_users = [["First Name [Required]", "Last Name [Required]", "Email Address [Required]",
+                         "Password [Required]", "Org Unit Path [Required]", "Change Password at Next Sign-In"]]
         print('creating users csv')
         with open("output/users_" + group + ".csv", 'w', newline='', encoding='utf-8') as csv_file:
             writer = csv.writer(csv_file, delimiter=',')
@@ -38,7 +39,7 @@ if __name__ == '__main__':
             for f_name in names:
                 if f_name is not None:
                     name = f_name.split(' ')
-                    stud = Student(name, domain,group, password, ou)
+                    stud = Student(name, domain, group, password, ou)
                     writer.writerow(stud.add_csv_users_line())
 
         header_groups = [["Group Email [Required]", "Member Email", "Member Type", "Member Role"]]
@@ -50,5 +51,5 @@ if __name__ == '__main__':
             for f_name in names:
                 if f_name is not None:
                     name = f_name.split(' ')
-                    stud = Student(name, domain,group, password, ou)
+                    stud = Student(name, domain, group, password, ou)
                     writer.writerow(stud.add_csv_groups_line())

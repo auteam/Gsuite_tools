@@ -1,4 +1,5 @@
 import docx
+import csv
 from docx.api import Document
 import re
 from transliterate import translit
@@ -18,6 +19,18 @@ class ImportDoc:
         if pattern == 'n1':
             self.grouplist = self.get_grouplist(filename)
             self.group = self.normalise_group(self.get_text(filename))
+        if pattern == 'csv':
+            self.grouplist = self.get_fio_csv(filename)
+            self.group = ''
+
+    def get_fio_csv(self, filename):
+        users = []
+        with open(filename) as csvfile:
+            spamreader = csv.reader(csvfile, delimiter=',')
+            for row in spamreader:
+                users.append(row[0])
+        print(users)
+        return users
 
     def get_text(self, filename):
         doc = docx.Document(filename)

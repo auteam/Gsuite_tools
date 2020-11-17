@@ -1,5 +1,5 @@
 /source/*
-!/source/Example
+!/input/Example
 /output/*
 .idea/.gitignore
 .idea/g_suite_toolbox.iml
