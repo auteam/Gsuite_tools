@@ -1,31 +1,28 @@
-from src.student import *
-from src.docx_import import *
-import config as cfg
+from config import config
+import re
+from src.docx_import import ImportDoc
+from src.student import Student
 import csv
 import os
 
-# This is a sample Python script.
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
 
-
-if __name__ == '__main__':
-    all_files = os.listdir(cfg.input_dir)
+def main():
+    all_files = os.listdir(config.import_conf.dir)
     files = []
     for file in all_files:
-        if re.match(cfg.regex_input_file, file):
+        if re.match(config.import_conf.regex_file, file):
             files.append(file)
     print(files, end='\n')
 
     for file in files:
-        filename = cfg.input_dir + file
+        filename = config.import_conf.dir + file
         print('\n' + filename)
-        doc_import = ImportDoc(filename, cfg.file_pattern)
+        doc_import = ImportDoc(filename, config.import_conf.pattern, config.import_conf.split_FIO)
 
-        group = cfg.user_data['group']
-        domain = cfg.user_data['domain']
-        password = cfg.user_data['password']
-        ou = cfg.user_data['ou']
+        group = config.user_conf.group
+        domain = config.user_conf.domain
+        password = config.user_conf.password
+        ou = config.user_conf.ou
 
         names = doc_import.grouplist
 
@@ -38,7 +35,10 @@ if __name__ == '__main__':
                 writer.writerow(line)
             for f_name in names:
                 if f_name is not None:
-                    name = f_name.split(' ')
+                    if config.import_conf.split_FIO:
+                        name = f_name.split(' ')
+                    else:
+                        name = f_name
                     stud = Student(name, domain, group, password, ou)
                     writer.writerow(stud.add_csv_users_line())
 
@@ -53,3 +53,7 @@ if __name__ == '__main__':
                     name = f_name.split(' ')
                     stud = Student(name, domain, group, password, ou)
                     writer.writerow(stud.add_csv_groups_line())
+
+
+if __name__ == '__main__':
+    main()

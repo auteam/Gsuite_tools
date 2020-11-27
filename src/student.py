@@ -1,5 +1,6 @@
 from transliterate import translit
-import config as cfg
+from config import config
+
 
 class Student:
     full_name_ru = ['Свирепов', 'Денис', 'Дмитриевич']
@@ -28,7 +29,7 @@ class Student:
         familia = (self.full_name_en[0].lower()).replace('\'', '')
         io = '.' + (self.full_name_en[1].lower()).replace('\'', '')[0] + \
              (self.full_name_en[2].lower()).replace('\'', '')[0]
-        if cfg.user_data['group_in_email']:
+        if config.user_conf.group_in_email:
             self.email = group_ + familia + io + '@' + domain
         else:
             self.email = familia + io + '@' + domain

@@ -3,6 +3,9 @@ import csv
 from docx.api import Document
 import re
 from transliterate import translit
+from config import config
+from src.student import *
+from src.docx_import import *
 
 
 class ImportDoc:
@@ -12,23 +15,27 @@ class ImportDoc:
     text = ''
     pattern = 'n1'
 
-    def __init__(self, filename, pattern):
+    def __init__(self, filename, pattern, split_fio):
         self.filename = filename
         self.pattern = pattern
-
+        # TODO отдельные классы для импорта docx и csv
         if pattern == 'n1':
             self.grouplist = self.get_grouplist(filename)
             self.group = self.normalise_group(self.get_text(filename))
         if pattern == 'csv':
-            self.grouplist = self.get_fio_csv(filename)
+            self.grouplist = self.get_fio_csv(filename, bool(split_fio))
             self.group = ''
 
-    def get_fio_csv(self, filename):
+    def get_fio_csv(self, filename, split_fio):
         users = []
         with open(filename) as csvfile:
             spamreader = csv.reader(csvfile, delimiter=',')
             for row in spamreader:
-                users.append(row[0])
+                if bool(row):                  # ignore empty lines
+                    if config.import_conf.split_FIO:
+                        users.append(row[0])
+                    else:
+                        users.append(row[0:3])
         print(users)
         return users
 
