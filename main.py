@@ -1,9 +1,10 @@
 from config import config
-import re
-from src.docx_import import ImportDoc
+from src.file_import import ImportFile
 from src.student import Student
-import csv
+
 import os
+import re
+import csv
 
 
 def main():
@@ -17,7 +18,7 @@ def main():
     for file in files:
         filename = config.import_conf.dir + file
         print('\n' + filename)
-        doc_import = ImportDoc(filename, config.import_conf.pattern, config.import_conf.split_FIO)
+        doc_import = ImportFile(filename)
 
         group = config.user_conf.group
         domain = config.user_conf.domain
@@ -29,7 +30,7 @@ def main():
         header_users = [["First Name [Required]", "Last Name [Required]", "Email Address [Required]",
                          "Password [Required]", "Org Unit Path [Required]", "Change Password at Next Sign-In"]]
         print('creating users csv')
-        with open("output/users_" + group + ".csv", 'w', newline='', encoding='utf-8') as csv_file:
+        with open("output/users_" + file + group + ".csv", 'w', newline='', encoding='utf-8') as csv_file:
             writer = csv.writer(csv_file, delimiter=',')
             for line in header_users:
                 writer.writerow(line)
@@ -44,7 +45,7 @@ def main():
 
         header_groups = [["Group Email [Required]", "Member Email", "Member Type", "Member Role"]]
         print('creating group csv')
-        with open("output/group_" + group + ".csv", 'w', newline='', encoding='utf-8') as csv_file:
+        with open("output/group_" + file + "_" + group + ".csv", 'w', newline='', encoding='utf-8') as csv_file:
             writer = csv.writer(csv_file, delimiter=',')
             for line in header_groups:
                 writer.writerow(line)

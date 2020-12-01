@@ -26,9 +26,10 @@ class Config(object):
 
         def __init__(self):
             self.dir = 'input/'         # / в конце нужно
-            self.regex_file = r'.*.csv' # регулярка входящих файлов
+            self.regex_file = r'^(?!Example).*$' # регулярка входящих файлов
             self.pattern = 'csv'        # шаблон согласно примерам n1 -- n1.docx, csv -- new.csv
             self.split_FIO = True       # разделенный ФИО в исходном файле или одним полем
+            self.encoding = "cp1251"     # utf-8 or cp1251 для excel files
 
     class UserConfig(object):
         """
